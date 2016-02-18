@@ -1,0 +1,27 @@
+#!/bin/bash
+echo "Creating uberjar:"
+
+lein uberjar
+cp $PWD/target/uberjar/tako-*-standalone.jar $PWD/target/tako.jar
+
+echo
+echo "Uploading as AWS lambda"
+
+# config variables
+: ${AWS_REGION:=us-east-1}
+: ${TAKO_FN_NAME:=tako}
+
+aws lambda update-function-code \
+  --region $AWS_REGION \
+  --function-name $TAKO_FN_NAME \
+  --publish \
+  --zip-file fileb://$PWD/target/tako.jar
+
+echo
+echo "Updating AWS lambda configuration"
+
+aws lambda update-function-configuration \
+  --region $AWS_REGION \
+  --function-name $TAKO_FN_NAME \
+  --memory-size 256 \
+  --timeout 60
