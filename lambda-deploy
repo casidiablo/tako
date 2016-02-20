@@ -1,26 +1,5 @@
 #!/bin/bash
-echo "Creating properties file..."
-echo
-if [ "$GITHUB_TOKEN" = "" ]; then
-  echo "You must specify a Github token using the env variable \$GITHUB_TOKEN.
-If you don't have a token, generate one at https://github.com/settings/tokens"
-  exit -1
-fi
-if [ "$SLACK_WEBHOOK_URL" = "" ]; then
-  echo "You must specify a Slack webhook URL using the env variable \$SLACK_WEBHOOK_URL.
-If you don't have one yet, generate it at https://slack.com/apps/new/A0F7XDUAZ-incoming-webhooks"
-  exit -1
-fi
-
-# create a config file with the token and url
-echo "github.token=$GITHUB_TOKEN" > resources/config.properties
-echo "slack.webhook.url=$SLACK_WEBHOOK_URL" >> resources/config.properties
-
-echo "Creating uberjar:"
-echo
-
-lein uberjar
-cp $PWD/target/uberjar/tako-*-standalone.jar $PWD/target/tako.jar
+bash build-jar
 
 echo
 echo "Uploading as AWS lambda"

@@ -28,4 +28,6 @@
   (info "Running tako from main...")
   (binding [tako.github/github-token (first args)
             tako.slack/slack-webhook-url (second args)]
-    (slack/publish-notifications (github/poll-notifications))))
+    (while true
+      (slack/publish-notifications (github/poll-notifications))
+      (Thread/sleep 60000))))
