@@ -32,8 +32,6 @@ In my current setup I have `tako` running on top of [AWS lambda](https://aws.ama
 - You don't need to care about configure/maintain a server
 - It is easy to update/deploy the code
 
-There's one caveat though: AWS can be configured to run every N minutes; the minimum N is 5, so worst case scenario you receive the notifications 5 minutes after they were produced. Not a big deal for me, but worth taking into account.
-
 That said, all you have to do is create a new AWS lambda function and configure it to run every 5 minutes. The steps are slightly modified from [this guide](http://docs.aws.amazon.com/lambda/latest/dg/with-scheduled-events.html):
 
 0: Build a jar
@@ -45,6 +43,7 @@ export SLACK_WEBHOOK_URL=the slack webhook url
 ./build-jar
 
 # a jar will be assembled in tako/target/tako.jar
+# by the way, the credentials are baked into the jar
 ```
 1. Sign in to the AWS Management Console and open the AWS Lambda console at https://console.aws.amazon.com/lambda/
 2. Choose Create a Lambda function.
@@ -71,3 +70,12 @@ You can upload changes from the command line by running:
     ./lambda-deploy
 
 Or by building a new jar and uploading it manually using the AWS web console.
+
+## Why this sucks
+
+There's many reasons not to use this:
+
+- **Can't reply notifications directly from Slack**. Email is way better here. If you rely a lot on this feature, this is not for you.
+- The highest frequency with which you can run this on AWS Lambda is **5 minutes**. Not a big deal for me, but worth taking into account.
+- Slack has serious **push notification** problems on Android. It is not 100% reliable. If you need to attend every notification timely it defintely could be an issue. That said, I hardly use my cellphone for this kind of stuff anyway. I built this with Slack Desktop in mind.
+- If you hate any of these things: Jeff Bezos, JVM, clojure, AWS, Slack... then it is probably not for you.
