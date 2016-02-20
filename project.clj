@@ -7,6 +7,7 @@
                  [cheshire "5.5.0"]
                  [org.julienxx/clj-slack "0.5.2.1"]
                  [org.clojure/tools.logging "0.3.1"]
+                 [clojurewerkz/propertied "1.2.0"]
                  [com.amazonaws/aws-lambda-java-core "1.1.0"]]
   :main ^:skip-aot tako.core
   :target-path "target/%s"

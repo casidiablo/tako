@@ -1,12 +1,16 @@
 (ns tako.core
   (:require [tako.github :as github]
             [tako.slack :as slack]
+            [clojure.java.io :as io]
+            [clojurewerkz.propertied.properties :as props]
             [clojure.tools.logging :refer [info]])
   (:gen-class
    :methods [^:static [handler [Object] String]]))
 
-(def github-token      "PLACE YOUR GITHUB TOKEN HERE")
-(def slack-webhook-url "PLACE THE SLACK WEBHOOK URL HERE")
+;; read credentials from config file
+(def config (-> "config.properties" io/resource props/load-from props/properties->map))
+(def github-token      (config "github.token"))
+(def slack-webhook-url (config "slack.webhook.url"))
 
 (defn -handler
   "This is the function called by AWS Lambda"
