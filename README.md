@@ -17,6 +17,7 @@ These are some (personal?) reasons to use tako:
 - [lein](http://leiningen.org)
 - A [Github token](https://github.com/settings/tokens)
 - A [Slack Webhook URL](https://slack.com/apps/new/A0F7XDUAZ-incoming-webhooks) pointing to a channel of your preference.
+- [Enable web notifications](https://github.com/settings/notifications) on Github
 
 To run locally:
 
@@ -71,7 +72,7 @@ You can upload changes from the command line by running:
 
 Or by building a new jar and uploading it manually using the AWS web console.
 
-## Why this sucks
+## Why not to use this
 
 There's many reasons not to use this:
 
