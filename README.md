@@ -33,7 +33,7 @@ In my current setup I have `tako` running on top of [AWS lambda](https://aws.ama
 - You don't need to care about configure/maintain a server
 - It is easy to update/deploy the code
 
-That said, all you have to do is create a new AWS lambda function and configure it to run every 5 minutes. The steps are slightly modified from [this guide](http://docs.aws.amazon.com/lambda/latest/dg/with-scheduled-events.html):
+All you have to do is create a new AWS lambda function and configure it:
 
 0: Build a jar
 ```bash
@@ -48,11 +48,10 @@ export SLACK_WEBHOOK_URL=the slack webhook url
 ```
 1. Sign in to the AWS Management Console and open the AWS Lambda console at https://console.aws.amazon.com/lambda/
 2. Choose Create a Lambda function.
-3. In **Step 1: Select blueprint**, choose the **lambda-canary** blueprint.
+3. In **Step 1: Select blueprint**, choose the **sns-message** blueprint.
 4. In **Step 2: Configure event source**:
-  - In **Event source type**, choose **CloudWatch Events - Schedule**.
-  - In **Name** type a name (for example, **Github Poller**). Then, this name appears in the list of event sources in the console.
-  - In **Schedule expression**, specify **rate(5 minutes)**.
+  - In **Event source type**, choose **SNS**.
+  - In **SNS topic** type `arn:aws:sns:us-east-1:821676841978:clock`. This is a public SNS topic that sends a message every minute, perpetually, amen.
 5. In **Step 3**: Configure function, do the following:
   - Set the function name to `tako`
   - In **Runtime**, specify *Java 8*
@@ -70,13 +69,17 @@ You can upload changes from the command line by running:
     # make sure you have awscli installed and configured
     ./lambda-deploy
 
-Or by building a new jar and uploading it manually using the AWS web console.
+Or by building a new jar and uploading it manually through the AWS web console.
 
 ## Why not to use this
 
 There's many reasons not to use this:
 
 - **Can't reply notifications directly from Slack**. Email is way better here. If you rely a lot on this feature, this is not for you.
-- The highest frequency with which you can run this on AWS Lambda is **5 minutes**. Not a big deal for me, but worth taking into account.
 - Slack has serious **push notification** problems on Android. It is not 100% reliable. If you need to attend every notification timely it defintely could be an issue. That said, I hardly use my cellphone for this kind of stuff anyway. I built this with Slack Desktop in mind.
 - If you hate any of these things: Jeff Bezos, JVM, clojure, AWS, Slack... then it is probably not for you.
+
+
+### Official Github/Slack integration
+
+Github provides an [official Slack integration](https://github.com/integrations/slack) and is super cool and useful when you want to focus on specific repositories and you want details of every commit or tag pushed to the repo (you have to manually choose which repos you want to get slack messages from). I highly recommend this over `tako` for such cases. It has some quircks like notifying you of code you just pushed, which is stupid, but whatever it works well and it's easier to configure than this project. That said, I built tako to replace the notifications inbox of the Github web and avoid email; and it works for _all_ the repos you watch, not only a few ones that you cherry pick.
